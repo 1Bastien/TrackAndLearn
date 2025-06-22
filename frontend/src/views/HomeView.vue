@@ -17,6 +17,7 @@
           <div class="flex justify-center space-x-4">
             <BaseButton
               class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg text-lg font-medium transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+              @click="handleCreatePath"
             >
               Créer mon parcours
             </BaseButton>
@@ -223,8 +224,8 @@
           d'apprentissage personnalisés
         </p>
         <BaseButton
-          to="/"
           class="bg-white hover:bg-gray-100 text-blue-600 px-8 py-3 rounded-lg text-lg font-medium transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+          @click="handleCreatePath"
         >
           Créer mon premier parcours
         </BaseButton>
@@ -233,6 +234,20 @@
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+  import { useRouter } from 'vue-router'
+  import authService from '../services/auth.js'
+
+  const router = useRouter()
+
+  const handleCreatePath = async () => {
+    if (authService.isAuthenticated()) {
+      router.push('/dashboard')
+    } else {
+      const authUrl = await authService.getAzureLoginUrl()
+      window.location.href = authUrl
+    }
+  }
+</script>
 
 <style scoped></style>
