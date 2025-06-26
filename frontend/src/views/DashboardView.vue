@@ -299,6 +299,8 @@
 
 <script>
   import BaseButton from '../components/BaseButton.vue'
+  import courseService from '../services/courseService.js'
+  import stepService from '../services/stepService.js'
 
   export default {
     name: 'DashboardView',
@@ -315,6 +317,92 @@
     },
     async mounted() {
       await this.loadDashboardData()
+    },
+    methods: {
+      async loadDashboardData() {
+        try {
+          this.loading = true
+
+          const [statsResponse, coursesResponse, deadlinesResponse] =
+            await Promise.all([
+              courseService.getStatistics(),
+              courseService.getCourses({ limit: 5 }),
+              stepService.getUpcomingDeadlines(7),
+            ])
+
+          this.statistics = statsResponse.data || {}
+          this.recentCourses = coursesResponse.data || []
+          this.upcomingDeadlines = deadlinesResponse.data || []
+        } catch (error) {
+          console.error('Error loading dashboard data:', error)
+        } finally {
+          this.loading = false
+        }
+      },
+
+      goToFormations() {
+        this.$router.push('/courses')
+      },
+
+      goToCourse(courseId) {
+        this.$router.push(`/courses/${courseId}`)
+      },
+
+      getStatusClass(status) {
+        switch (status) {
+          case 'completed':
+            return 'bg-green-100 text-green-800'
+          case 'in_progress':
+            return 'bg-blue-100 text-blue-800'
+          case 'suspended':
+            return 'bg-orange-100 text-orange-800'
+          case 'planned':
+          default:
+            return 'bg-gray-100 text-gray-800'
+        }
+      },
+
+      getStatusText(status) {
+        switch (status) {
+          case 'completed':
+            return 'Terminé'
+          case 'in_progress':
+            return 'En cours'
+          case 'suspended':
+            return 'Suspendu'
+          case 'planned':
+          default:
+            return 'Planifié'
+        }
+      },
+
+      getDeadlineClass(dateString) {
+        const deadline = new Date(dateString)
+        const now = new Date()
+        const diffDays = Math.ceil((deadline - now) / (1000 * 60 * 60 * 24))
+
+        if (diffDays < 0) return 'text-red-600'
+        if (diffDays <= 1) return 'text-orange-600'
+        if (diffDays <= 3) return 'text-yellow-600'
+        return 'text-green-600'
+      },
+
+      getDeadlineText(dateString) {
+        const deadline = new Date(dateString)
+        const now = new Date()
+        const diffDays = Math.ceil((deadline - now) / (1000 * 60 * 60 * 24))
+
+        if (diffDays < 0) return 'En retard'
+        if (diffDays === 0) return "Aujourd'hui"
+        if (diffDays === 1) return 'Demain'
+        return `Dans ${diffDays} jours`
+      },
+
+      formatDate(dateString) {
+        if (!dateString) return ''
+        const date = new Date(dateString)
+        return date.toLocaleDateString('fr-FR')
+      },
     },
   }
 </script>
