@@ -1,6 +1,6 @@
 <template>
   <header class="bg-white shadow-lg border-b border-gray-100">
-    <div class="max-w-6xl mx-auto px-8">
+    <div class="mx-auto px-8">
       <div class="flex items-center justify-between h-16">
         <div class="flex items-center">
           <div class="flex-shrink-0">
@@ -45,18 +45,25 @@
               class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 z-50"
             >
               <router-link
+                to="/dashboard"
+                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                @click="closeUserMenu"
+              >
+                Dashboard
+              </router-link>
+              <router-link
+                to="/courses"
+                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                @click="closeUserMenu"
+              >
+                Mes formations
+              </router-link>
+              <router-link
                 to="/account"
                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                 @click="closeUserMenu"
               >
                 Mon compte
-              </router-link>
-              <router-link
-                to="/dashboard"
-                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                @click="closeUserMenu"
-              >
-                Mon dashboard
               </router-link>
               <button
                 class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
@@ -115,7 +122,7 @@
 
   const handleCreatePath = async () => {
     if (isAuthenticated.value) {
-      router.push('/dashboard')
+      router.push('/courses')
     } else {
       handleLogin()
     }
@@ -127,7 +134,7 @@
       window.location.href = authUrl
     } catch (error) {
       console.error('Erreur lors de la connexion:', error)
-      alert('Erreur lors de la connexion. Veuillez réessayer.')
+      window.alert('Erreur lors de la connexion. Veuillez réessayer.')
     }
   }
 
