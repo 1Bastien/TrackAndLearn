@@ -242,7 +242,7 @@
 
   const handleCreatePath = async () => {
     if (authService.isAuthenticated()) {
-      router.push('/dashboard')
+      router.push('/courses')
     } else {
       const authUrl = await authService.getAzureLoginUrl()
       window.location.href = authUrl
