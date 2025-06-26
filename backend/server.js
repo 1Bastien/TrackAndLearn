@@ -3,6 +3,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import authRoutes from "./routes/auth.js";
+import courseRoutes from "./routes/courses.js";
+import stepRoutes from "./routes/steps.js";
 
 dotenv.config();
 
@@ -13,16 +15,20 @@ app.use(cors());
 app.use(express.json());
 
 mongoose.connect(process.env.MONGODB_URI).catch((error) => {
-  console.error("Erreur de connexion à MongoDB:", error);
+  console.error("Error connecting to MongoDB:", error);
 });
 
 app.use("/api/auth", authRoutes);
+app.use("/api/courses", courseRoutes);
+app.use("/api/steps", stepRoutes);
 
 app.get("/", (req, res) => {
   res.json({
     message: "Backend Track&Learn",
     endpoints: {
       auth: "/api/auth",
+      courses: "/api/courses",
+      steps: "/api/steps",
       azureLogin: "/api/auth/azure/login",
       azureCallback: "/api/auth/azure/callback",
       userProfile: "/api/auth/me",
@@ -33,10 +39,10 @@ app.get("/", (req, res) => {
 app.listen(PORT);
 
 process.on("unhandledRejection", (err) => {
-  console.error("Erreur non gérée:", err);
+  console.error("Unhandled rejection:", err);
 });
 
 process.on("uncaughtException", (err) => {
-  console.error("Exception non capturée:", err);
+  console.error("Uncaught exception:", err);
   process.exit(1);
 });
