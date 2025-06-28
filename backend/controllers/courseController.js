@@ -133,6 +133,28 @@ class CourseController {
       });
     }
   }
+
+  async getProgressHistory(req, res) {
+    try {
+      const userId = req.user.id;
+      const days = parseInt(req.query.days) || 30;
+
+      const progressHistory = await courseService.getProgressHistory(
+        userId,
+        days
+      );
+
+      res.json({
+        success: true,
+        data: progressHistory,
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: error.message,
+      });
+    }
+  }
 }
 
 export default new CourseController();

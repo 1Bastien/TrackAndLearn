@@ -68,6 +68,35 @@ stepSchema.pre("save", function (next) {
       this.completedDate = undefined;
     }
   }
+
+  if (
+    this.isModified("completedDate") &&
+    this.completedDate &&
+    this.status !== "completed"
+  ) {
+    this.status = "completed";
+  }
+  next();
+});
+
+stepSchema.pre("findOneAndUpdate", function (next) {
+  const update = this.getUpdate();
+
+  if (update.status === "completed" && !update.completedDate) {
+    update.completedDate = new Date();
+  }
+
+  if (update.status && update.status !== "completed") {
+    update.completedDate = undefined;
+  }
+
+  if (
+    update.completedDate &&
+    (!update.status || update.status !== "completed")
+  ) {
+    update.status = "completed";
+  }
+
   next();
 });
 

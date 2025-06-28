@@ -10,6 +10,7 @@ router.post("/", courseController.createCourse);
 router.get("/", courseController.getCourses);
 
 router.get("/statistics", courseController.getStatistics);
+router.get("/progress-history", courseController.getProgressHistory);
 router.get("/:id", courseController.getCourse);
 router.put("/:id", courseController.updateCourse);
 router.delete("/:id", courseController.deleteCourse);
