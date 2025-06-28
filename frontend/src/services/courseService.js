@@ -123,6 +123,28 @@ class CourseService {
       throw error
     }
   }
+
+  async getProgressHistory() {
+    try {
+      const response = await fetch(`${API_BASE_URL}/courses/progress-history`, {
+        headers: this.getAuthHeaders(),
+      })
+
+      if (!response.ok) {
+        throw new Error(
+          "Erreur lors de la récupération de l'historique de progression"
+        )
+      }
+
+      return await response.json()
+    } catch (error) {
+      console.error(
+        "Erreur lors de la récupération de l'historique de progression:",
+        error
+      )
+      throw error
+    }
+  }
 }
 
 export default new CourseService()

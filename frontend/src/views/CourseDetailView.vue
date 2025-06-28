@@ -293,6 +293,25 @@
                         </svg>
                         Échéance: {{ formatDate(step.endDate) }}
                       </div>
+                      <div
+                        v-if="step.completedDate && step.status === 'completed'"
+                        class="flex items-center"
+                      >
+                        <svg
+                          class="w-4 h-4 mr-1"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
+                        </svg>
+                        Terminé le: {{ formatDateTime(step.completedDate) }}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -567,6 +586,19 @@
         if (!dateString) return ''
         const date = new Date(dateString)
         return date.toLocaleDateString('fr-FR')
+      },
+
+      formatDateTime(dateString) {
+        if (!dateString) return ''
+        const date = new Date(dateString)
+        return (
+          date.toLocaleDateString('fr-FR') +
+          ' à ' +
+          date.toLocaleTimeString('fr-FR', {
+            hour: '2-digit',
+            minute: '2-digit',
+          })
+        )
       },
 
       getStepsPageNumbers() {
