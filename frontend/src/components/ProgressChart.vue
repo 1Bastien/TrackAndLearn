@@ -1,10 +1,10 @@
 <template>
   <div
-    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+    class="fixed inset-0 backdrop-blur-md flex items-center justify-center z-50"
     @click="closeModal"
   >
     <div
-      class="bg-white rounded-xl p-6 w-11/12 max-w-6xl max-h-[90vh] overflow-y-auto"
+      class="bg-white rounded-xl p-6 w-11/12 max-w-6xl max-h-[90vh] overflow-y-auto border-2 border-gray-200"
       @click.stop
     >
       <div class="flex justify-between items-center mb-6">

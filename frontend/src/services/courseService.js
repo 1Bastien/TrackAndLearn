@@ -145,6 +145,26 @@ class CourseService {
       throw error
     }
   }
+
+  async globalSearch(query) {
+    try {
+      const params = new URLSearchParams()
+      params.append('q', query)
+
+      const response = await fetch(`${API_BASE_URL}/search?${params}`, {
+        headers: this.getAuthHeaders(),
+      })
+
+      if (!response.ok) {
+        throw new Error('Erreur lors de la recherche')
+      }
+
+      return await response.json()
+    } catch (error) {
+      console.error('Erreur lors de la recherche:', error)
+      throw error
+    }
+  }
 }
 
 export default new CourseService()
