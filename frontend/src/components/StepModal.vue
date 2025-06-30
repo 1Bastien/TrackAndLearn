@@ -127,11 +127,31 @@
                 id="statut"
                 v-model="form.status"
                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                @change="handleStatusChange"
               >
                 <option value="todo">À faire</option>
                 <option value="in_progress">En cours</option>
                 <option value="completed">Terminé</option>
               </select>
+            </div>
+
+            <div v-if="form.status === 'completed'">
+              <label
+                for="dateCompletion"
+                class="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Date de completion
+              </label>
+              <input
+                id="dateCompletion"
+                v-model="form.completedDate"
+                type="datetime-local"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+              <p class="mt-1 text-xs text-gray-500">
+                Laissez vide pour utiliser la date courante lors de la
+                sauvegarde
+              </p>
             </div>
 
             <div v-if="!isEditing">
@@ -231,6 +251,7 @@
           externalLink: '',
           startDate: '',
           endDate: '',
+          completedDate: '',
           status: 'todo',
           order: null,
         },
@@ -253,6 +274,9 @@
           endDate: this.step.endDate
             ? this.formatDateForInput(this.step.endDate)
             : '',
+          completedDate: this.step.completedDate
+            ? this.formatDateTimeForInput(this.step.completedDate)
+            : '',
           status: this.step.status || 'todo',
           order: this.step.order || null,
         }
@@ -273,6 +297,11 @@
           if (formData.endDate) {
             formData.endDate = new Date(formData.endDate).toISOString()
           }
+          if (formData.completedDate) {
+            formData.completedDate = new Date(
+              formData.completedDate
+            ).toISOString()
+          }
 
           if (!formData.externalLink) {
             delete formData.externalLink
@@ -285,6 +314,9 @@
           }
           if (!formData.endDate) {
             delete formData.endDate
+          }
+          if (!formData.completedDate) {
+            delete formData.completedDate
           }
           if (!formData.order) {
             delete formData.order
@@ -308,6 +340,26 @@
         if (!dateString) return ''
         const date = new Date(dateString)
         return date.toISOString().split('T')[0]
+      },
+
+      formatDateTimeForInput(dateString) {
+        if (!dateString) return ''
+        const date = new Date(dateString)
+        const year = date.getFullYear()
+        const month = String(date.getMonth() + 1).padStart(2, '0')
+        const day = String(date.getDate()).padStart(2, '0')
+        const hours = String(date.getHours()).padStart(2, '0')
+        const minutes = String(date.getMinutes()).padStart(2, '0')
+        return `${year}-${month}-${day}T${hours}:${minutes}`
+      },
+
+      handleStatusChange() {
+        if (this.form.status === 'completed' && !this.form.completedDate) {
+          const now = new Date()
+          this.form.completedDate = this.formatDateTimeForInput(now)
+        } else if (this.form.status !== 'completed') {
+          this.form.completedDate = ''
+        }
       },
     },
   }

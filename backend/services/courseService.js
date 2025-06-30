@@ -155,6 +155,36 @@ class CourseService {
       throw new Error(`Error getting user statistics: ${error.message}`);
     }
   }
+
+  async getProgressHistory(userId, days = 30) {
+    try {
+      const courses = await Course.find({ userId }).select(
+        "title _id startDate createdAt"
+      );
+
+      const coursesWithSteps = await Promise.all(
+        courses.map(async (course) => {
+          const allSteps = await Step.find({ courseId: course._id }).select(
+            "completedDate _id"
+          );
+
+          return {
+            _id: course._id,
+            title: course.title,
+            startDate: course.startDate || course.createdAt,
+            steps: allSteps.map((step) => ({
+              _id: step._id,
+              completedDate: step.completedDate,
+            })),
+          };
+        })
+      );
+
+      return coursesWithSteps;
+    } catch (error) {
+      throw new Error(`Error getting progress history: ${error.message}`);
+    }
+  }
 }
 
 export default new CourseService();
