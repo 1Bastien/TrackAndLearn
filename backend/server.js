@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 import authRoutes from "./routes/auth.js";
 import courseRoutes from "./routes/courses.js";
 import stepRoutes from "./routes/steps.js";
+import searchRoutes from "./routes/search.js";
 
 dotenv.config();
 
@@ -21,6 +22,7 @@ mongoose.connect(process.env.MONGODB_URI).catch((error) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/courses", courseRoutes);
 app.use("/api/steps", stepRoutes);
+app.use("/api/search", searchRoutes);
 
 app.get("/", (req, res) => {
   res.json({
@@ -29,6 +31,7 @@ app.get("/", (req, res) => {
       auth: "/api/auth",
       courses: "/api/courses",
       steps: "/api/steps",
+      search: "/api/search",
       azureLogin: "/api/auth/azure/login",
       azureCallback: "/api/auth/azure/callback",
       userProfile: "/api/auth/me",
